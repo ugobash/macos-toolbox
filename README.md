@@ -2,7 +2,7 @@
 
 A lightweight, interactive terminal interface for managing Homebrew packages.
 
-## Key Features
+## Features
 
 * Interactive Search
 * Installation Queue
