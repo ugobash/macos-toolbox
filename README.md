@@ -22,5 +22,6 @@ A lightweight, interactive terminal interface for managing Homebrew packages.
 
 ## Requirements
 
-* A Mac with Homebrew installed.
+* ~~A Mac with Homebrew installed.~~
+  The script will install Homebrew if it is not already installed.
 * Zsh (the default shell on macOS).
