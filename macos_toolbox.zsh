@@ -1,9 +1,29 @@
 #!/bin/zsh
 
-# --- 0. SELF-FIXING PERMISSIONS ---
-if [[ ! -x "$0" ]]; then
-    chmod +x "$0"
-    exec "$0" "$@"
+# --- 0. CHECKS ---
+if ! command -v brew &> /dev/null; then
+    echo "Homebrew not found. Starting installation..."
+    echo "Note: You might be asked for your Mac password."
+    
+    # Run the official installer
+    if /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"; then
+        
+        # Make brew available immediately in the current session
+        if [[ -f /opt/homebrew/bin/brew ]]; then
+            eval "$(/opt/homebrew/bin/brew shellenv)"
+        else
+            eval "$(/usr/local/bin/brew shellenv)"
+        fi
+        
+        echo "--------------------------------------------------"
+        echo "Homebrew installed successfully!"
+        echo "--------------------------------------------------"
+    else
+        echo "Error: Homebrew installation failed."
+        exit 1
+    fi
+else
+    echo "Homebrew is already installed."
 fi
 
 # --- 1. COLORS & STYLE ---
@@ -68,7 +88,7 @@ draw_menu() {
         [[ $cursor -lt 1 && $list_size -gt 0 ]] && cursor=1
 
         if [[ $list_size -eq 0 ]]; then
-            echo -e "\n  $fg[black](Nothing here)$reset_color"
+            echo -e "\n  $fg[yellow](Nothing here)$reset_color"
         else
             for i in {1..$list_size}; do
                 local item="${display_list[$i]}"
@@ -101,7 +121,7 @@ while true; do
                 results=(${(f)"$(brew search "$search_query" | head -n 30)"})
                 is_searching=false; cursor=1 
             fi ;;
-        "v"|"V") # Cycle
+        "v"|"V") # VIEWS
             if [[ "$view_mode" == "search" ]]; then view_mode="selection"
             elif [[ "$view_mode" == "selection" ]]; then view_mode="installed"
             elif [[ "$view_mode" == "installed" ]]; then view_mode="uninstall"
@@ -166,8 +186,8 @@ if (( ${#to_install} > 0 )); then
 fi
 
 # 3. Cleanup
-echo -e "$fg[cyan]==>$reset_color Sweeping up..."
-brew autoremove 2>/dev/null
+echo -e "$fg[cyan]==>$reset_color Cleaning up..."
+brew autoremove
 brew cleanup
 
 echo -e "\n$fg[green]✔$reset_color ${BOLD}All done!${RESET}"
