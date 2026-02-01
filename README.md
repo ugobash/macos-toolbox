@@ -1,6 +1,7 @@
 # macOS Toolbox
 
 A lightweight, interactive terminal interface for managing Homebrew packages.
+<img width="924" height="462" alt="image" src="https://github.com/user-attachments/assets/23b8ffdf-71fb-40c4-8690-db612a0d03f6" />
 
 ## Features
 
